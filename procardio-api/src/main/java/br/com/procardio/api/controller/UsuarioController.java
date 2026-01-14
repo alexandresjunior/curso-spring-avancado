@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.procardio.api.dto.UsuarioDTO;
+import br.com.procardio.api.dto.UsuarioResponseDTO;
 import br.com.procardio.api.model.Usuario;
 import br.com.procardio.api.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -22,16 +23,17 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    public ResponseEntity<Usuario> cadastrarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
         Usuario novoUsuario = usuarioService.salvarUsuario(usuarioDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UsuarioResponseDTO(novoUsuario));
     }
 
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTO usuarioDTO) {
         Usuario usuarioAtualizado = usuarioService.salvarUsuario(id, usuarioDTO);
         
         if (Objects.nonNull(usuarioAtualizado)) {
-            return ResponseEntity.ok(usuarioAtualizado);
+            return ResponseEntity.ok(new UsuarioResponseDTO(usuarioAtualizado));
         }
         return ResponseEntity.notFound().build();
     }
