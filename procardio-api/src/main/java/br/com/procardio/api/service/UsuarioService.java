@@ -14,12 +14,16 @@ import br.com.procardio.api.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
-    
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public void salvarUsuario(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
 
     public Usuario salvarUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario();
@@ -37,7 +41,7 @@ public class UsuarioService {
             // Atualiza dados básicos
             var usuarioAtualizado = usuario.toModel(usuarioDTO);
             usuarioAtualizado.setId(usuario.getId()); // Garante o ID
-            
+
             // Re-hash da senha caso tenha sido alterada
             usuarioAtualizado.setSenha(passwordEncoder.encode(usuarioDTO.senha()));
 

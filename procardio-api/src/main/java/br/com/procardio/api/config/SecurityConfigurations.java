@@ -44,7 +44,7 @@ public class SecurityConfigurations {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll();
                     // Opcional: Liberar Swagger ou outros endpoints públicos aqui
                     // O endpoint de callback do Google precisa ser público,
                     // mas o Spring Security gerencia isso internamente na cadeia oauth2Login

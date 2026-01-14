@@ -50,6 +50,12 @@ public class Usuario implements UserDetails {
     @Embedded
     private Endereco endereco;
 
+    @Column(name = "is_tfa_enabled")
+    private boolean isTfaEnabled = false;
+
+    @Column(name = "tfa_secret")
+    private String tfaSecret;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tb_perfis", joinColumns = @JoinColumn(name = "usuario_id"))
     @Enumerated(EnumType.STRING)
