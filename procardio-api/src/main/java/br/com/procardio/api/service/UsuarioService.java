@@ -7,25 +7,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.procardio.api.dto.EnderecoDTO;
 import br.com.procardio.api.dto.UsuarioDTO;
 import br.com.procardio.api.exceptions.UsuarioNaoEncontradoException;
+import br.com.procardio.api.model.Endereco;
 import br.com.procardio.api.model.Usuario;
 import br.com.procardio.api.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
-    
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ViaCepService viaCepService;
+
     public Usuario salvarUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario();
 
         usuario = usuario.toModel(usuarioDTO);
         usuario.setSenha(passwordEncoder.encode(usuarioDTO.senha()));
+
+        if (Objects.nonNull(usuarioDTO.cep()) || !usuarioDTO.cep().isBlank()) {
+            preencherCamposEndereco(usuario, usuarioDTO);
+        }
 
         return usuarioRepository.save(usuario);
     }
@@ -35,9 +44,13 @@ public class UsuarioService {
 
         if (Objects.nonNull(usuario)) {
             usuario = usuario.toModel(usuarioDTO);
-            
+
             usuario.setId(id);
             usuario.setSenha(passwordEncoder.encode(usuarioDTO.senha()));
+
+            if (Objects.nonNull(usuarioDTO.cep()) || !usuarioDTO.cep().isBlank()) {
+                preencherCamposEndereco(usuario, usuarioDTO);
+            }
 
             return usuarioRepository.save(usuario);
         }
@@ -63,6 +76,23 @@ public class UsuarioService {
 
     public List<Usuario> buscarUsuariosPorNome(String nome) {
         return usuarioRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    private void preencherCamposEndereco(Usuario usuario, UsuarioDTO usuarioDTO) {
+        EnderecoDTO enderecoDTO = viaCepService.obterDadosEnderecoPeloCep(usuarioDTO.cep());
+
+        if (Objects.nonNull(enderecoDTO) && !enderecoDTO.erro()) {
+            Endereco endereco = usuario.getEndereco();
+
+            endereco.setBairro(enderecoDTO.bairro());
+            endereco.setCidade(enderecoDTO.localidade());
+            endereco.setEstado(enderecoDTO.uf());
+            endereco.setLogradouro(enderecoDTO.logradouro());
+            endereco.setCep(enderecoDTO.cep());
+
+            endereco.setNumero(usuarioDTO.numero());
+            endereco.setComplemento(usuarioDTO.complemento());
+        }
     }
 
 }

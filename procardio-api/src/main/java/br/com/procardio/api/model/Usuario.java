@@ -1,6 +1,7 @@
 package br.com.procardio.api.model;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,22 +68,14 @@ public class Usuario implements UserDetails {
         usuario.setEmail(dto.email());
         usuario.setSenha(dto.senha());
 
+        this.perfis = new HashSet<>();
+
         if (Objects.nonNull(dto.perfis())) {
             dto.perfis().stream().forEach(perfil -> {
                 if (Objects.nonNull(perfil)) {
                     this.adicionarPerfil(perfil);
                 }
             });
-        }
-
-        if (dto.cep() != null || dto.numero() != null || dto.complemento() != null) {
-            Endereco endereco = new Endereco();
-
-            endereco.setCep(dto.cep());
-            endereco.setNumero(dto.numero());
-            endereco.setComplemento(dto.complemento());
-
-            usuario.setEndereco(endereco);
         }
 
         return usuario;

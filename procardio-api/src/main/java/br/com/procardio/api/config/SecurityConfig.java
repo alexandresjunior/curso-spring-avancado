@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/usuarios").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> oauth2.successHandler(googleLoginSuccessHandler()))
