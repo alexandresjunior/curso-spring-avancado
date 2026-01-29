@@ -57,10 +57,6 @@ public class Usuario implements UserDetails {
     @Column(name = "perfil")
     private Set<Perfil> perfis;
 
-    public void adicionarPerfil(Perfil perfil) {
-        this.perfis.add(perfil);
-    }
-
     public Usuario toModel(UsuarioDTO dto) {
         Usuario usuario = new Usuario();
 
@@ -68,15 +64,17 @@ public class Usuario implements UserDetails {
         usuario.setEmail(dto.email());
         usuario.setSenha(dto.senha());
 
-        this.perfis = new HashSet<>();
+        Set<Perfil> perfis = new HashSet<>();
 
         if (Objects.nonNull(dto.perfis())) {
             dto.perfis().stream().forEach(perfil -> {
                 if (Objects.nonNull(perfil)) {
-                    this.adicionarPerfil(perfil);
+                    perfis.add(perfil);
                 }
             });
         }
+
+        usuario.setPerfis(perfis);
 
         return usuario;
     }
