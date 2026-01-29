@@ -18,7 +18,7 @@ public class ViaCepService {
             return null;
         }
 
-        String cepFormatado = cep.replace("\\D", "");
+        String cepFormatado = cep.replaceAll("\\D", "");
 
         if (cepFormatado.length() != 8) {
             throw new IllegalArgumentException("CEP invalido!");

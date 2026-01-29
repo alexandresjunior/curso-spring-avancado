@@ -81,8 +81,8 @@ public class UsuarioService {
     private void preencherCamposEndereco(Usuario usuario, UsuarioDTO usuarioDTO) {
         EnderecoDTO enderecoDTO = viaCepService.obterDadosEnderecoPeloCep(usuarioDTO.cep());
 
-        if (Objects.nonNull(enderecoDTO) && !enderecoDTO.erro()) {
-            Endereco endereco = usuario.getEndereco();
+        if (Objects.nonNull(enderecoDTO)) {
+            Endereco endereco = new Endereco();
 
             endereco.setBairro(enderecoDTO.bairro());
             endereco.setCidade(enderecoDTO.localidade());
@@ -92,6 +92,8 @@ public class UsuarioService {
 
             endereco.setNumero(usuarioDTO.numero());
             endereco.setComplemento(usuarioDTO.complemento());
+
+            usuario.setEndereco(endereco);
         }
     }
 

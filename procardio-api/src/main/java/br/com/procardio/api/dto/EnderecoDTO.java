@@ -5,7 +5,6 @@ public record EnderecoDTO(
     String logradouro,
     String bairro,
     String localidade,
-    String uf,
-    boolean erro
+    String uf
 ) {
 }
