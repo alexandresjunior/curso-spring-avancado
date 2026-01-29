@@ -5,14 +5,12 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.procardio.llm.api.client.ProcardioClient;
 import br.com.procardio.llm.api.dto.EnderecoDTO;
-import br.com.procardio.llm.api.dto.UsuarioDTO;
 import br.com.procardio.llm.api.service.GeminiService;
 
 @RestController
@@ -22,21 +20,10 @@ public class GeminiController {
     @Autowired
     private GeminiService geminiService;
 
-    @Autowired
-    private ProcardioClient procardioClient;
-
-    @GetMapping("/usuario/{id}")
-    public ResponseEntity<String> gerarMensagemUsuario(@PathVariable Long id) {
-        UsuarioDTO usuario = procardioClient.obterDadosUsuario(id);
-
-        if (Objects.isNull(usuario)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
-        }
-
-        EnderecoDTO endereco = usuario.endereco();
-
+    @PostMapping("/")
+    public ResponseEntity<String> gerarMensagemUsuario(@RequestBody EnderecoDTO endereco) {
         if (Objects.isNull(endereco)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário sem endereço não cadastrado!");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Campo 'endereco' não informado!");
         }
 
         String mensagem = geminiService.gerarDicaDeSaude(endereco.cidade(), endereco.estado());
