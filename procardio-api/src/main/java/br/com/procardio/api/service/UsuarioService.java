@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.procardio.api.dto.EnderecoDTO;
 import br.com.procardio.api.dto.UsuarioDTO;
+import br.com.procardio.api.dto.ViaCepDTO;
 import br.com.procardio.api.exceptions.UsuarioNaoEncontradoException;
 import br.com.procardio.api.model.Endereco;
 import br.com.procardio.api.model.Usuario;
@@ -79,7 +79,7 @@ public class UsuarioService {
     }
 
     private void preencherCamposEndereco(Usuario usuario, UsuarioDTO usuarioDTO) {
-        EnderecoDTO enderecoDTO = viaCepService.obterDadosEnderecoPeloCep(usuarioDTO.cep());
+        ViaCepDTO enderecoDTO = viaCepService.obterDadosEnderecoPeloCep(usuarioDTO.cep());
 
         if (Objects.nonNull(enderecoDTO)) {
             Endereco endereco = new Endereco();

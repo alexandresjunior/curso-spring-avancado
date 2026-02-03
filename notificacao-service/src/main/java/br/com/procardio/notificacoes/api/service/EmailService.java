@@ -27,7 +27,7 @@ public class EmailService {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
 
-            MimeMessageHelper helper = new MimeMessageHelper(message);
+            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
 
             Context context = new Context();
             context.setVariable("nome", nome);

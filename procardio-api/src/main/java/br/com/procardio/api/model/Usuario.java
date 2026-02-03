@@ -11,7 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import br.com.procardio.api.dto.EnderecoDTO;
 import br.com.procardio.api.dto.UsuarioDTO;
+import br.com.procardio.api.dto.UsuarioResponseDTO;
 import br.com.procardio.api.enums.Perfil;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -114,6 +116,18 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public UsuarioResponseDTO toDTO() {
+        String cidade = null;
+        String estado = null;
+
+        if (Objects.nonNull(this.endereco)) {
+            cidade = endereco.getCidade();
+            estado = endereco.getEstado();
+        }
+
+        return new UsuarioResponseDTO(id, nome, email, new EnderecoDTO(cidade, estado));
     }
 
 }

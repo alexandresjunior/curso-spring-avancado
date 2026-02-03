@@ -44,7 +44,7 @@ public class UsuarioController {
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios()
                                                 .stream()
-                                                .map(u -> new UsuarioResponseDTO(u))
+                                                .map(u -> u.toDTO())
                                                 .collect(Collectors.toList()));
     }
 

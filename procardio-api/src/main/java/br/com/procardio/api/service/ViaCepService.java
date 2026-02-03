@@ -6,14 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.procardio.api.dto.EnderecoDTO;
+import br.com.procardio.api.dto.ViaCepDTO;
 
 @Service
 public class ViaCepService {
 
     private final String URL_BASE_VIACEP = "https://viacep.com.br/ws/";
     
-    public EnderecoDTO obterDadosEnderecoPeloCep(String cep) {
+    public ViaCepDTO obterDadosEnderecoPeloCep(String cep) {
         if (Objects.isNull(cep) || cep.isBlank()) {
             return null;
         }
@@ -34,7 +34,7 @@ public class ViaCepService {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            ResponseEntity<EnderecoDTO> endereco = restTemplate.getForEntity(url, EnderecoDTO.class);
+            ResponseEntity<ViaCepDTO> endereco = restTemplate.getForEntity(url, ViaCepDTO.class);
 
             return endereco.getBody();
         } catch (Exception ex) {

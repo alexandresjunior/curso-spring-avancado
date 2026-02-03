@@ -20,7 +20,7 @@ public class GeminiController {
     @Autowired
     private GeminiService geminiService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> gerarMensagemUsuario(@RequestBody EnderecoDTO endereco) {
         if (Objects.isNull(endereco)) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Campo 'endereco' não informado!");

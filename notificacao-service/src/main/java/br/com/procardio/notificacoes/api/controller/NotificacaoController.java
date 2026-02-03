@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.procardio.notificacoes.api.client.ProcardioClient;
 import br.com.procardio.notificacoes.api.dto.UsuarioDTO;
+import br.com.procardio.notificacoes.api.scheduler.NotificacaoScheduler;
 
 @RestController
 @RequestMapping("/api/notificacoes")
@@ -17,6 +19,9 @@ public class NotificacaoController {
     
     @Autowired
     private ProcardioClient procardioClient;
+
+    @Autowired
+    private NotificacaoScheduler notificacaoScheduler;
 
     @PostMapping("/boas-vindas")
     public ResponseEntity<String> enviarEmailBoasVindas() {
@@ -37,5 +42,11 @@ public class NotificacaoController {
         return ResponseEntity.ok(logEnvio.toString());
     } 
 
+    @GetMapping("/emails")
+    public ResponseEntity<Void> dispararEmails() {
+        notificacaoScheduler.processarEnvioEmails();
+
+        return ResponseEntity.ok().build();
+    }
 
 }
