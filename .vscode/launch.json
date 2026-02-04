@@ -2,6 +2,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "GatewayServiceApplication",
+            "request": "launch",
+            "mainClass": "br.com.gateway.service.GatewayServiceApplication"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-LlmApiApplication<llm-api>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
