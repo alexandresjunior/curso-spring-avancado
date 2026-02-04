@@ -42,7 +42,7 @@ public class NotificacaoScheduler {
                     String mensagem = geminiClient.gerarMensagemCorpoEmail(new EnderecoDTO(cidade, estado));
 
                     // Envio do email para o usuario
-                    emailService.enviarEmailPersonalizado(cidade, estado, mensagem);
+                    emailService.enviarEmailPersonalizado(usuario.email(), usuario.nome(), mensagem);
                 }
             }
         } catch (Exception ex) {
