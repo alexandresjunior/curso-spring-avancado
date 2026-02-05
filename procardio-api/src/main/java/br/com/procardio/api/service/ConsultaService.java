@@ -4,12 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import br.com.procardio.api.dto.ConsultaAgendadaEvent;
 import br.com.procardio.api.exceptions.ConflitoAgendamentoException;
 import br.com.procardio.api.model.Consulta;
 import br.com.procardio.api.repository.ConsultaRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ConsultaService {
@@ -17,14 +21,45 @@ public class ConsultaService {
     @Autowired
     private ConsultaRepository consultaRepository;
 
+    // Injetamos o template do RabbitMQ para envio de mensagens
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    // Injetamos o nome da exchange configurada no application.properties
+    @Value("${app.rabbitmq.exchange.eventos}")
+    private String exchangeEventos;
+
+    @Transactional // Garante que se o envio falhar drasticamente, podemos controlar o rollback (opcional dependendo da estratégia)
     public Consulta salvarConsulta(Consulta consulta) {
-        Optional<Consulta> consultaExistente = consultaRepository.findByMedico_IdAndDataHora(consulta.getMedico().getId(), consulta.getDataHora());
+        // 1. Validação de Regra de Negócio
+        Optional<Consulta> consultaExistente = consultaRepository.findByMedico_IdAndDataHora(
+            consulta.getMedico().getId(), 
+            consulta.getDataHora()
+        );
 
         if (consultaExistente.isPresent()) {
             throw new ConflitoAgendamentoException("Conflito de agendamento: o médico já possui uma consulta marcada nesta data para esse horário.");
         }
+
+        // 2. Persistência no Banco de Dados
+        Consulta consultaSalva = consultaRepository.save(consulta);
         
-        return consultaRepository.save(consulta);
+        // 3. Publicação do Evento de Integração (Assíncrono)
+        // Montamos o DTO do evento com base na entidade salva
+        ConsultaAgendadaEvent evento = new ConsultaAgendadaEvent(
+            consultaSalva.getId(),
+            consultaSalva.getPaciente().getId(),
+            consultaSalva.getPaciente().getNome(),
+            consultaSalva.getPaciente().getEmail(),
+            consultaSalva.getMedico().getNome(),
+            consultaSalva.getMedico().getEspecialidade().name(),
+            consultaSalva.getDataHora()
+        );
+
+        // Routing Key: "consulta.agendada" (serve para filtrar quem recebe a mensagem)
+        rabbitTemplate.convertAndSend(exchangeEventos, "consulta.agendada", evento);
+        
+        return consultaSalva;
     }
 
     public List<Consulta> listarConsultas() {
