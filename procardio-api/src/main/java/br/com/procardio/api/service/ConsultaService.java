@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import br.com.procardio.api.dto.ConsultaAgendadaEvent;
 import br.com.procardio.api.exceptions.ConflitoAgendamentoException;
 import br.com.procardio.api.model.Consulta;
 import br.com.procardio.api.repository.ConsultaRepository;
@@ -17,14 +20,34 @@ public class ConsultaService {
     @Autowired
     private ConsultaRepository consultaRepository;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Value("${app.rabbitmq.exchange.eventos}")
+    private String exchangeEventos;
+
     public Consulta salvarConsulta(Consulta consulta) {
         Optional<Consulta> consultaExistente = consultaRepository.findByMedico_IdAndDataHora(consulta.getMedico().getId(), consulta.getDataHora());
 
         if (consultaExistente.isPresent()) {
             throw new ConflitoAgendamentoException("Conflito de agendamento: o médico já possui uma consulta marcada nesta data para esse horário.");
         }
+
+        Consulta consultaAgendada = consultaRepository.save(consulta);
+
+        ConsultaAgendadaEvent evento = new ConsultaAgendadaEvent(
+            consultaAgendada.getId(), 
+            consulta.getPaciente().getId(), 
+            consulta.getPaciente().getNome(), 
+            consulta.getPaciente().getEmail(), 
+            consulta.getMedico().getNome(), 
+            consulta.getMedico().getEspecialidade().toString(), 
+            consulta.getDataHora()
+        );
+
+        rabbitTemplate.convertAndSend(exchangeEventos, "consulta.agendada", evento);
         
-        return consultaRepository.save(consulta);
+        return consultaAgendada;
     }
 
     public List<Consulta> listarConsultas() {
