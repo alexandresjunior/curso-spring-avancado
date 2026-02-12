@@ -1,64 +1,185 @@
 {
-	"info": {
-		"_postman_id": "78440d6c-62db-4b88-8b9c-ff808f1adfd5",
-		"name": "Procardio API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24855073"
-	},
-	"item": [
-		{
-			"name": "Autenticacao",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"vitor@treinarecife.com.br\",\n    \"senha\": \"vitor123\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/auth/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Excluir Medicos",
-			"request": {
-				"auth": {
-					"type": "bearer"
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/medicos/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"medicos",
-						"1"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "78440d6c-62db-4b88-8b9c-ff808f1adfd5",
+    "name": "Procardio API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24855073"
+  },
+  "item": [
+    {
+      "name": "Autenticacao",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"jaime@dafonte.com.br\",\n    \"senha\": \"123abc\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Excluir Medicos",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/medicos/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "medicos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Envio de Notificacoes",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/api/notificacoes/boas-vindas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "api",
+            "notificacoes",
+            "boas-vindas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cadastro de Usuario",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Jaime da Fonte\",\n    \"email\": \"jaime2@dafonte.com.br\",\n    \"senha\": \"123abc\",\n    \"cep\": \"51021-000\",\n    \"numero\": \"495\",\n    \"complemento\": \"Perto da praia\",\n    \"perfis\": [\"PACIENTE\"]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8085/api/auth/cadastro",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8085",
+          "path": [
+            "api",
+            "auth",
+            "cadastro"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Agendar Consulta",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWltZUBkYWZvbnRlLmNvbS5iciIsImlzcyI6IkFQSSBQcm9jYXJkaW8iLCJleHAiOjE3NzA4Mjk0ODh9.Bm-d47AYWYrD5ySAhb6uS8N9o5lvHj3oUX700h8cB2w",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"paciente\": {\r\n        \"id\": 1,\r\n        \"nome\": \"Jaime da Fonte\",\r\n        \"email\": \"jaime@dafonte.com.br\",\r\n        \"senha\": \"$2a$10$n1m2nMUEjmSMnF7Xs0SaSemh.FCvQquARZlm8JOkuL1.gPBHrpYZe\",\r\n        \"endereco\": {\r\n            \"logradouro\": \"Avenida Boa Viagem\",\r\n            \"bairro\": \"Boa Viagem\",\r\n            \"cidade\": \"Recife\",\r\n            \"estado\": \"PE\",\r\n            \"cep\": \"51021-000\",\r\n            \"numero\": \"495\",\r\n            \"complemento\": \"Perto da praia\"\r\n        },\r\n        \"perfis\": [],\r\n        \"accountNonExpired\": true,\r\n        \"accountNonLocked\": true,\r\n        \"authorities\": [],\r\n        \"credentialsNonExpired\": true,\r\n        \"enabled\": true,\r\n        \"password\": \"$2a$10$n1m2nMUEjmSMnF7Xs0SaSemh.FCvQquARZlm8JOkuL1.gPBHrpYZe\",\r\n        \"username\": \"jaime@dafonte.com.br\"\r\n    },\r\n    \"medico\": {\r\n        \"id\": 1,\r\n        \"nome\": \"Vitor Santos\",\r\n        \"email\": \"vitor@gmail.com\",\r\n        \"crm\": \"123\",\r\n        \"especialidade\": \"CARDIOLOGIA\"\r\n    },\r\n    \"dataHora\": \"2026-12-25T10:45:00\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/consultas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "consultas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Obter Consulta",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYWltZUBkYWZvbnRlLmNvbS5iciIsImlzcyI6IkFQSSBQcm9jYXJkaW8iLCJleHAiOjE3NzA4NTUxMDl9.tDNHOL2BMKyPjVdJxJzR75id0g-vhhXj2NY6TLuCZ74",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/consultas/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "consultas",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
 }
