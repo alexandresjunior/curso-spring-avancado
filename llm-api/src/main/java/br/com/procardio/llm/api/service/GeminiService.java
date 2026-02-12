@@ -58,6 +58,8 @@ public class GeminiService {
                     .get(0)
                     .text();
         } catch (Exception ex) {
+            System.err.println("Erro ao chamar API do Gemini: " + ex.getMessage());
+            
             return """
                     Dica de saúde geral:
                     Mantenha-se hidratado e faça exercícios!

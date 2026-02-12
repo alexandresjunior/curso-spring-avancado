@@ -48,4 +48,10 @@ public class UsuarioController {
                                                 .collect(Collectors.toList()));
     }
 
+    @GetMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:8081")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(id).toDTO());
+    }
+
 }
